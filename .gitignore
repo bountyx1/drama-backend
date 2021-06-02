@@ -1,0 +1,4 @@
+env/
+**/*.sqlite3
+**/drama.json
+**/export.py

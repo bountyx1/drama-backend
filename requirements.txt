@@ -1,0 +1,7 @@
+django-restql
+django
+djangorestframework
+djangorestframework-simplejwt
+django-filter
+requests
+bs4
