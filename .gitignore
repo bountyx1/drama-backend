@@ -1,4 +1,5 @@
 env/
 **/*.sqlite3
-**/drama.json
+**/data.csv
 **/export.py
+**/__pycache__/
