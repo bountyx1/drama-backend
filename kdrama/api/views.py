@@ -1,3 +1,4 @@
+from requests.api import head
 from rest_framework import viewsets, filters
 from .serializers import (
     DramaSerializer, GenreSerializer,
@@ -80,11 +81,10 @@ class EpisodeViewSet(viewsets.ModelViewSet):
 def drive(request):
     id = request.GET.get("id")
     key = request.GET.get("key")
-    # No longer drive_stream cookie required use resource key
-    #token = request.GET.get("token")
-    # header = {"Cookie": f"DRIVE_STREAM={token};"}
+    token = request.GET.get("token")
+    header = {"Cookie": f"DRIVE_STREAM={token};"}
     driveurl = f"https://drive.google.com/u/0/get_video_info?docid={id}&resourcekey={key}"
-    query = requests.get(driveurl).text
+    query = requests.get(driveurl, headers=header).text
     media_map = parse_qs(query)["fmt_stream_map"]
     url = media_map[0].split("|")[1].split(",")[0]
 
