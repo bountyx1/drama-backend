@@ -6,17 +6,6 @@ import asyncio
 from json import loads
 
 
-def get_drive_link(vid, stream):
-    header = {"Cookie": f"DRIVE_STREAM={stream};"}
-    driveurl = f"https://drive.google.com/u/0/get_video_info?docid={vid}"
-    resp = get(driveurl, headers=header)
-    query = resp.text
-    print(query)
-    media_map = parse_qs(query)["fmt_stream_map"]
-    url = media_map[0].split("|")[1].split(",")[0]
-    return url
-
-
 class HttpRequest:
 
     def __init__(self, url, headers={}, params=""):

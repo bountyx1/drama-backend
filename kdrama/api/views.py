@@ -5,12 +5,15 @@ from .serializers import (
     CastSerializer, WatchListSerializer,
     LikeSerializer, RoomSerializer)
 from .models import Drama, Genre, Cast, Episode, Like, WatchList, Room
-from .helper import get_drive_link, Drama as ExtractDrama, DramaCool
+from .helper import Drama as ExtractDrama, DramaCool
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+import requests
+from urllib.parse import  parse_qs
+
 
 
 class DramaViewSet(viewsets.ModelViewSet):
@@ -75,11 +78,17 @@ class EpisodeViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def drive(request):
-    stream = request.GET.get("stream")
-    vid = request.GET.get("vid")
-    url = get_drive_link(vid, stream)
-    response = {"url": url}
-    return Response(response)
+    id = request.GET.get("id")
+    key = request.GET.get("key")
+    # No longer drive_stream cookie required use resource key
+    #token = request.GET.get("token")
+    # header = {"Cookie": f"DRIVE_STREAM={token};"}
+    driveurl = f"https://drive.google.com/u/0/get_video_info?docid={id}&resourcekey={key}"
+    query = requests.get(driveurl).text
+    media_map = parse_qs(query)["fmt_stream_map"]
+    url = media_map[0].split("|")[1].split(",")[0]
+
+    return Response({"url":url})
 
 
 @api_view(['GET'])
